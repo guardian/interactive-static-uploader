@@ -1,0 +1,17 @@
+{
+  "name": "interactive-uploader",
+  "version": "0.0.0",
+  "authors": [
+    "andymason <a.w.mason@gmail.com>"
+  ],
+  "license": "Apache 2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+  }
+}

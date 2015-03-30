@@ -1,0 +1,15 @@
+<h1>Sucess</h1>
+
+<p>File uploaded: {{zipFileName}}</p>
+
+<p>Embed path <a id="embedPath" href="{{embedPath}}"> {{embedPath}} </a> </p>
+
+<h2>Files uploaded</h2>
+<ul>
+    {{#files}}
+        <li><a href="{{embedPath}}{{.}}">{{.}}</a></li>
+    {{/files}}
+</ul>
+
+<h2>Preview</h2>
+<iframe id="embedPreview" src="{{embedPath}}" width="400" height="300"></iframe>

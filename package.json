@@ -1,0 +1,22 @@
+{
+  "name": "interactive-uploader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "s3-upload-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrew Mason (andrew.mason@theguardian.com)",
+  "license": "Apache 2.0",
+  "dependencies": {
+    "consolidate": "^0.12.1",
+    "express": "^4.12.3",
+    "extract-zip": "^1.0.3",
+    "morgan": "^1.5.2",
+    "multer": "^0.1.8",
+    "mustache": "^2.0.0",
+    "recursive-readdir": "^1.2.1",
+    "s3": "^4.4.0",
+    "tmp": "0.0.25"
+  }
+}
