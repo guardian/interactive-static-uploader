@@ -3,3 +3,27 @@ body {
     padding: 0;
     font-family: helvetica, arial, sans-serif;
 }
+
+#zipfile {
+  padding: 10%;
+  background: rgb(131, 140, 170);
+  border: 3px dashed #FFF;
+}
+
+#uploadBtn {
+    padding: 10px 20px;
+}
+
+#msgBox {
+    background: #E46B4C;
+    text-align: center;
+    padding: 12px;
+    font-weight: bold;
+    color: #fff;
+    margin: 0.6rem 0;
+    display: none;
+}
+
+#msgBox.active {
+    display: block;
+}

@@ -4,6 +4,7 @@ var express = require('express');
 var multer = require('multer');
 var morgan = require('morgan');
 var extract = require('extract-zip');
+var querystring = require('querystring');
 var engines = require('consolidate');
 var tmp = require('tmp');
 var fs = require('fs');
@@ -98,6 +99,7 @@ app.get('/', function(req, res){
         uploader.on('error', function(err) {
             console.error('unable to sync:', err.stack);
             tmpobj.removeCallback();
+            res.redirect('/error?params='  + JSON.stringify(err));
         });
         uploader.on('progress', function() {
             console.log('progress',
@@ -106,20 +108,31 @@ app.get('/', function(req, res){
         uploader.on('end', function() {
             console.log('done uploading');
             tmpobj.removeCallback();
-
             var embedPath = awsConfig.baseURL + uploadPath;
-            return res.render('base', {
+            var params = {
                 files: filePaths,
                 zipFileName: file.originalname,
-                embedPath: embedPath,
-                partials: { body: 'partials/success' }
-            });
+                embedPath: embedPath
+            };
+            res.redirect('/success?params='  + JSON.stringify(params));
         });
     });
-
 })
-.get('/finished', function(req, res){
-  res.send('DONE');
+.get('/fail', function(req, res) {
+    var params = req.param('params');
+    var json = JSON.parse(params);
+    json.partials = { body: 'partials/error' };
+
+    // var embedPath = awsConfig.baseURL + uploadPath;
+    return res.render('base', json);
+})
+.get('/success', function(req, res) {
+    var params = req.param('params');
+    var json = JSON.parse(params);
+    json.partials = { body: 'partials/success' };
+
+    // var embedPath = awsConfig.baseURL + uploadPath;
+    return res.render('base', json);
 });
 
 
