@@ -1,47 +1,91 @@
-/*global  */
+/*global  JSZip*/
 'use strict';
 
 console.log('Loaded.');
 
-var uploadBtn = document.querySelector('#uploadBtn');
-var fileInput = document.querySelector('#zipfile');
-var msgBox = document.querySelector('#msgBox');
+var zip = new JSZip();
+
+
+var zipFileNameEl = document.querySelector('#zipFileName');
+var zipFileListEl = document.querySelector('#zipFileList');
+var uploadBtnEl = document.querySelector('#uploadBtn');
+var fileInputEl = document.querySelector('#zipfile');
+var msgBoxEl = document.querySelector('#msgBox');
 
 var messages = {
-    wrongType: 'You can only upload .zip files'
+    wrongType: 'You can only upload .zip files',
+    missingIndexFile: 'WARNING: No index.html file found in ZIP file'
 };
 
 
-function isZipFile() {
-    return (fileInput.files[0].type === 'application/zip');
-}
-
 function showMsg(msg) {
-    msgBox.classList.add('active');
-    msgBox.innerHTML = msg;
+    msgBoxEl.classList.add('active');
+    msgBoxEl.innerHTML = msg;
 }
 
 function hideMsg() {
-    msgBox.classList.remove('active');
-    msgBox.innerHTML = '';
+    msgBoxEl.classList.remove('active');
+    msgBoxEl.innerHTML = '';
 }
 
 
+function checkForIndexFile(filePaths) {
+    var hasIndexFile = filePaths.some(function(filePath) { 
+        return filePath.indexOf('index.html') !== -1;
+    });
+
+    if (!hasIndexFile) {
+        showMsg(messages.missingIndexFile);
+    }
+}
+
+function listZipContents(zipFileName, filePaths) {
+    console.log(zipFileName, filePaths);
+    zipFileNameEl.innerHTML = zipFileName;
+
+    zipFileListEl.innerHTML = '';
+    filePaths.forEach(function(filePath) {
+        var li = document.createElement('li');
+        li.innerHTML = filePath;
+        zipFileListEl.appendChild(li);
+    });
+}
+
+
+
+function readZipFile(zipFile) {
+    return function(evt) {
+        var zip = new JSZip(evt.target.result);
+        var filePaths = Object.keys(zip.files);
+        checkForIndexFile(filePaths);
+        listZipContents(zipFile.name, filePaths);
+    };
+}
+
 function checkFile() {
-    if (fileInput.files.length === 0) {
-       uploadBtn.setAttribute('disabled', 'disabled');
+    if (fileInputEl.files.length === 0) {
+       uploadBtnEl.setAttribute('disabled', 'disabled');
        return;
     }
 
-    if (isZipFile() === false) {
-        uploadBtn.setAttribute('disabled', 'disabled');
+    var isZipFile = (fileInputEl.files[0].type === 'application/zip');
+    if (!isZipFile) {
+        uploadBtnEl.setAttribute('disabled', 'disabled');
         showMsg(messages.wrongType);
         return;
     }
 
-    uploadBtn.removeAttribute('disabled');
+    var zipFile = fileInputEl.files[0];
+    var reader = new FileReader();
+    reader.onload = readZipFile(zipFile);
+    reader.readAsArrayBuffer(zipFile);
+
+    uploadBtnEl.removeAttribute('disabled');
     hideMsg();
 }
 
-fileInput.addEventListener('change', checkFile, false);
-fileInput.value = null;
+
+
+
+fileInputEl.addEventListener('change', checkFile, false);
+fileInputEl.value = null;

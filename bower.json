@@ -13,6 +13,6 @@
     "tests"
   ],
   "dependencies": {
-    "dropzone": "~4.0.1"
+    "jszip": "~2.5.0"
   }
 }
