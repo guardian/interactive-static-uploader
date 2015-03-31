@@ -1,5 +1,4 @@
 'use strict';
-
 var express = require('express');
 var multer = require('multer');
 var morgan = require('morgan');
@@ -29,10 +28,14 @@ app.engine('html', engines.mustache);
 app.set('view engine', 'html');
 app.use(morgan('dev'));
 app.use(multer({
-    // dest: './tmp/',
     limits : { fileSize: 100000000 }, // 100MB
     putSingleFilesInArray: true
 }));
+
+var messeges = {
+    noFile: 'No .zip file was selected.',
+    wrongFileType: 'Only .zip files are allowed.'
+};
 
 // Routes
 app.get('/', function(req, res){
@@ -42,20 +45,14 @@ app.get('/', function(req, res){
     res.redirect('/');
 })
 .post('/upload', function(req, res) {
-    if (req.files.zipfile === undefined ||
-        req.files.zipfile[0] === undefined) {
-        return res.render('base', {
-            error: 'No .zip file was selected.',
-            partials: { body: 'partials/error' }
-        });
+    var isFileUploaded = (req.files.zipfile && req.files.zipfile.length > 0);
+    if (!isFileUploaded) {
+        return res.redirect('/error?msg=' + messeges.noFile);
     }
 
     var file = req.files.zipfile[0];
-    if (file.extension.toLowerCase() !== 'zip') {
-        return res.render('base', {
-            error: 'Only .zip files are allowed.',
-            partials: { body: 'partials/error' }
-        });
+    if (file.mimetype !== 'application/zip') {
+        return res.redirect('/error?msg=' + messeges.wrongFileType);
     }
 
     var tmpobj = tmp.dirSync({ prefix: 'giv-', unsafeCleanup: true });
@@ -68,9 +65,7 @@ app.get('/', function(req, res){
 
         var filePaths = [];
         recursive(tmpobj.name, function(err, files) {
-            if (err) {
-                return console.log('ERROR', err);
-            }
+            if (err) { return console.log('ERROR', err); }
             filePaths = files.map(function(file) {
                 return file.replace(tmpobj.name, '');
             });
@@ -84,7 +79,7 @@ app.get('/', function(req, res){
         uploadPath += '-' + Date.now();
 
         // Set upload parameters
-        var params = {
+        var uploadParams = {
             localDir: tmpobj.name,
             s3Params: {
                 Bucket: 'gdn-testing',
@@ -95,11 +90,11 @@ app.get('/', function(req, res){
         };
 
         // Sync folder
-        var uploader = s3Client.uploadDir(params);
+        var uploader = s3Client.uploadDir(uploadParams);
         uploader.on('error', function(err) {
             console.error('unable to sync:', err.stack);
             tmpobj.removeCallback();
-            res.redirect('/error?params='  + JSON.stringify(err));
+            res.redirect('/error?msg=' + querystring.stringify(err));
         });
         uploader.on('progress', function() {
             console.log('progress',
@@ -108,33 +103,23 @@ app.get('/', function(req, res){
         uploader.on('end', function() {
             console.log('done uploading');
             tmpobj.removeCallback();
-            var embedPath = awsConfig.baseURL + uploadPath;
-            var params = {
+            var successData = {
                 files: filePaths,
                 zipFileName: file.originalname,
-                embedPath: embedPath
+                embedPath: awsConfig.baseURL + uploadPath
             };
-            res.redirect('/success?params='  + JSON.stringify(params));
+            res.redirect('/success?' + querystring.stringify(successData));
         });
     });
 })
-.get('/fail', function(req, res) {
-    var params = req.param('params');
-    var json = JSON.parse(params);
-    json.partials = { body: 'partials/error' };
-
-    // var embedPath = awsConfig.baseURL + uploadPath;
-    return res.render('base', json);
+.get('/error', function(req, res) {
+    req.query.partials = { body: 'partials/error'};
+    res.render('base', req.query);
 })
-.get('/success', function(req, res) {
-    var params = req.param('params');
-    var json = JSON.parse(params);
-    json.partials = { body: 'partials/success' };
-
-    // var embedPath = awsConfig.baseURL + uploadPath;
-    return res.render('base', json);
+.get('/success', function(req, res) { 
+    req.query.partials = { body: 'partials/success'};
+    res.render('base', req.query);
 });
-
 
 // Start the app
 app.listen(3000);
