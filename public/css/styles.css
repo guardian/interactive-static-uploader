@@ -1,13 +1,58 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: helvetica, arial, sans-serif;
+    font-family: "Guardian Egyptian Web","Guardian Text Egyptian Web",Georgia,serif;
+    font-size: 18px;
+}
+
+header {
+    font-family: "Guardian Egyptian Web","Guardian Text Egyptian Web",Georgia,serif;
+    background: #005689;
+    color: #FFF;
+    padding: 7px 10px;
+    font-weight: 700;
+    line-height: 0.9rem;
+}
+
+#logo svg {
+    width: 80px;
+    height: 15px;
+    display: inline-block;
+    float: left;
+    margin-right: 10px;
+}
+
+header a {
+    color: #FFF;
+    text-decoration: none;
+}
+
+#wrapper {
+    margin: 2rem;
+}
+
+.stepNum {
+  display: inline-block;
+  padding: 10px;
+  background: #F2F2F2;
+  border-radius: 70%;
+  width: 1.5rem;
+  text-align: center;
+  font-weight: 700;
+  line-height: 1.4rem;
+  font-size: 1.6rem;
 }
 
 #zipfile {
-  padding: 10%;
-  background: rgb(131, 140, 170);
-  border: 3px dashed #FFF;
+    padding: 9% 2rem;
+    background: #005689;
+    border: 4px dotted #FFF;
+    color: #fff;
+    font-family: "Guardian Text Sans Web","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    font-size: 1rem;
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
 }
 
 #uploadBtn {
@@ -25,5 +70,13 @@ body {
 }
 
 #msgBox.active {
+    display: block;
+}
+
+.hide {
+    display: none;
+}
+
+.show {
     display: block;
 }

@@ -1,16 +1,28 @@
 <div id="msgBox"></div>
 
 <form action="/upload" method="post" enctype="multipart/form-data" id="uploader">
-    <input id="projectName" name="projectName" placeholder="Project name" />
-    <label for="zipfile">Zip file</label>
-    <input type="file" name="zipfile" id="zipfile" />
-    <input type="submit" value="Upload" id="uploadBtn" disabled="disabled" />
+    
+    <div id="step1">
+        <p class="stepCount">Step <span class="stepNum">1</span></p>
+        <p class="instructions">
+            Choose a <code>.zip</code> file containing the files you want to upload or drag it onto the box below.
+        </p>
+        <input type="file" name="zipfile" id="zipfile" />    
+    </div>
+    <div id="step2">
+
+        <input id="projectName" name="projectName" placeholder="Project name" />
+
+        <div id="zipFile">
+            <h2 id="zipFileName"></h2>
+            <ul id="zipFileList"></ul>
+        </div>
+        <input type="submit" value="Upload" id="uploadBtn" disabled="disabled" />
+    </div>
+    
 </form>
 
-<div id="zipFile">
-    <h2 id="zipFileName"></h2>
-    <ul id="zipFileList"></ul>
-</div>
+
 
 <script src="jszip/dist/jszip.js"></script>
 <script src="js/main.js"></script>
