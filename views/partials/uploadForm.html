@@ -1,8 +1,7 @@
-<h1>Guardian visuals uploader {{ title }}</h1>
-
 <div id="msgBox"></div>
 
 <form action="/upload" method="post" enctype="multipart/form-data" id="uploader">
+    <input id="projectName" name="projectName" placeholder="Project name" />
     <label for="zipfile">Zip file</label>
     <input type="file" name="zipfile" id="zipfile" />
     <input type="submit" value="Upload" id="uploadBtn" disabled="disabled" />

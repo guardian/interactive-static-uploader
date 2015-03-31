@@ -12,6 +12,7 @@
     "consolidate": "^0.12.1",
     "express": "^4.12.3",
     "extract-zip": "^1.0.3",
+    "moment": "^2.9.0",
     "morgan": "^1.5.2",
     "multer": "^0.1.8",
     "mustache": "^2.0.0",

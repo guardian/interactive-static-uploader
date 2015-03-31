@@ -2,6 +2,7 @@
 var express = require('express');
 var multer = require('multer');
 var morgan = require('morgan');
+var moment = require('moment');
 var extract = require('extract-zip');
 var querystring = require('querystring');
 var engines = require('consolidate');
@@ -74,18 +75,29 @@ app.get('/', function(req, res){
         // Delete zip
         fs.unlink(zipPath);
 
-        var uploadPath = 'uploader';
+        var projectName = 'visual';
+        if (req.body.projectName && req.body.projectName.length > 1) {
+            projectName = req.body.projectName.toLowerCase();
+            projectName = projectName.trim();
+            projectName = projectName.replace(' ', '-');
+
+            var badCharsRegex = /[^a-zA-Z\d\-\_\+]/g;
+            projectName = projectName.replace(badCharsRegex, '');
+        }
+
+        var uploadPath = awsConfig.folderPath;
+        uploadPath += moment().format('YYYY/MM');
+        uploadPath += '/' + projectName;
         uploadPath += tmpobj.name.substr(tmpobj.name.lastIndexOf('/'));
-        uploadPath += '-' + Date.now();
 
         // Set upload parameters
         var uploadParams = {
             localDir: tmpobj.name,
             s3Params: {
-                Bucket: 'gdn-testing',
+                Bucket: awsConfig.bucketName,
                 Prefix: uploadPath,
                 ACL: 'public-read',
-                CacheControl: 'max-age=57'
+                CacheControl: 'max-age=3600'
             }
         };
 

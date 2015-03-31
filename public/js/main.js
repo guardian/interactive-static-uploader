@@ -1,22 +1,16 @@
 /*global  JSZip*/
 'use strict';
-
-console.log('Loaded.');
-
-var zip = new JSZip();
-
-
 var zipFileNameEl = document.querySelector('#zipFileName');
 var zipFileListEl = document.querySelector('#zipFileList');
 var uploadBtnEl = document.querySelector('#uploadBtn');
 var fileInputEl = document.querySelector('#zipfile');
 var msgBoxEl = document.querySelector('#msgBox');
+var prjectNameEl = document.querySelector('#projectName');
 
 var messages = {
     wrongType: 'You can only upload .zip files',
     missingIndexFile: 'WARNING: No index.html file found in ZIP file'
 };
-
 
 function showMsg(msg) {
     msgBoxEl.classList.add('active');
@@ -51,12 +45,19 @@ function listZipContents(zipFileName, filePaths) {
     });
 }
 
-
+function setProjectName(zipFileName) {
+    var projectName = zipFileName.trim();
+    var extRegex = /\.zip/gi;
+    projectName = projectName.replace(extRegex, '');
+    prjectNameEl.value = projectName;
+}
 
 function readZipFile(zipFile) {
     return function(evt) {
         var zip = new JSZip(evt.target.result);
         var filePaths = Object.keys(zip.files);
+
+        setProjectName(zipFile.name);
         checkForIndexFile(filePaths);
         listZipContents(zipFile.name, filePaths);
     };
@@ -83,9 +84,6 @@ function checkFile() {
     uploadBtnEl.removeAttribute('disabled');
     hideMsg();
 }
-
-
-
 
 fileInputEl.addEventListener('change', checkFile, false);
 fileInputEl.value = null;

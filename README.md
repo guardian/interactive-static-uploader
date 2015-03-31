@@ -19,19 +19,21 @@ such as [forever](https://github.com/foreverjs/forever) or
 
 
 ## Todo
+- [ ] Warn about no index.html in zip root
 - [ ] Add navigation. Upload another etc.
-- [ ] Set sensible file size limits
 - [ ] Style up frontend
 - [ ] Pick a sensible upload folder to prevent clashes
+- [ ] Set sensible file size limits
 - [ ] Report progress to user while uploading
 - [ ] Check for index.html
 - [ ] Security: Restrict to Guardian IP
-- [ ] Black-list files eg. .DS_Store
+- [ ] Black-list files and folders eg. .DS_Store
 - [ ] Security: Added Google Auth
 - [ ] Simple deploy system for fixes
 - [ ] Check for index.html
 - [ ] Browser test 
 - [ ] Write docs
+- [x] Use zip file name as default project name
 - [x] Better success param passing
 - [x] Only show success after finishing s3 sync
 - [x] Success screen with embed code and preview (iframe)
