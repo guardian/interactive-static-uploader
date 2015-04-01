@@ -6,6 +6,10 @@ var uploadBtnEl = document.querySelector('#uploadBtn');
 var fileInputEl = document.querySelector('#zipfile');
 var msgBoxEl = document.querySelector('#msgBox');
 var prjectNameEl = document.querySelector('#projectName');
+var step1El = document.querySelector('#step1');
+var step1NumEl = document.querySelector('.step1');
+var step2El = document.querySelector('#step2');
+var stepNumEls = document.querySelectorAll('.step');
 
 var badCharsRegex = /[^a-zA-Z\d\-\_\+]/g;
 
@@ -45,7 +49,6 @@ function checkForRootIndexFile(filePaths) {
 }
 
 function listZipContents(zipFileName, filePaths) {
-    console.log(zipFileName, filePaths);
     zipFileNameEl.innerHTML = zipFileName;
 
     zipFileListEl.innerHTML = '';
@@ -57,7 +60,6 @@ function listZipContents(zipFileName, filePaths) {
 }
 
 function setProjectName(zipFileName) {
-
     var projectName = zipFileName.trim();
     var extRegex = /\.zip/gi;
     projectName = projectName.replace(/\W+/, '-');
@@ -91,6 +93,13 @@ function checkFile() {
         return;
     }
 
+    step1El.style.display = 'none';
+    step2El.style.display = 'block';
+    [].forEach.call(stepNumEls, function(el , i) {
+        if (i === 1) { el.classList.toggle('disabled', false); }
+        else { el.classList.toggle('disabled', true); }
+    });
+
     var zipFile = fileInputEl.files[0];
     var reader = new FileReader();
     reader.onload = readZipFile(zipFile);
@@ -102,3 +111,16 @@ function checkFile() {
 
 fileInputEl.addEventListener('change', checkFile, false);
 fileInputEl.value = null;
+
+function goToStepOne() {
+    hideMsg();
+    fileInputEl.value = null;
+    step1El.style.display = 'block';
+    step2El.style.display = 'none';
+    [].forEach.call(stepNumEls, function(el , i) {
+        if (i === 0) { el.classList.toggle('disabled', false); }
+        else { el.classList.toggle('disabled', true); }
+    });
+}
+
+step1NumEl.addEventListener('click', goToStepOne, false);

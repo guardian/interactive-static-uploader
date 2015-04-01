@@ -28,8 +28,29 @@ header a {
 }
 
 #wrapper {
-    margin: 2rem;
+    margin: 2rem auto;
+    max-width: 1020px;
 }
+
+#steps {
+    overflow: hidden;
+    border-bottom: 1px solid #EEE;
+}
+#step2 {
+    display: none;
+}
+
+.step {
+    float: left;
+    width: 120px;
+}
+.step1 {
+    cursor: pointer;
+}
+.step1:hover {
+    opacity: 1;
+}
+
 
 .stepNum {
   display: inline-block;
@@ -41,6 +62,18 @@ header a {
   font-weight: 700;
   line-height: 1.4rem;
   font-size: 1.6rem;
+}
+
+#zipFileName {
+    font-weight: 700;
+}
+
+.disabled {
+    opacity: 0.3;
+}
+
+#uploader {
+    clear: both;
 }
 
 #zipfile {
@@ -55,8 +88,31 @@ header a {
     text-align: center;
 }
 
+#zipFileList {
+    font-family: "Guardian Text Sans Web","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    font-size: 11px;
+    line-height: 14px;
+    padding-left: 1rem;
+}
+
+#projectNameLabel {
+    display: block;
+    margin-bottom: 0.4rem;
+}
+
+#projectName {
+  display: block;
+  font-size: 1.4rem;
+  padding: 0.2rem 0.5rem;
+  float: left;
+    margin-right: 8px;
+    margin-bottom: 0.3rem;
+}
+
 #uploadBtn {
-    padding: 10px 20px;
+  font-size: 1.4rem;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
 }
 
 #msgBox {
@@ -67,6 +123,19 @@ header a {
     color: #fff;
     margin: 0.6rem 0;
     display: none;
+}
+
+#step2Wrapper {
+    float: right;
+    width: 50%;
+}
+#zipFile {
+    float: left;
+    width: 50%;
+}
+
+#zipFile p {
+    margin: 0;
 }
 
 #msgBox.active {
