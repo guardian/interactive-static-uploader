@@ -6,6 +6,8 @@ var uploadBtnEl = document.querySelector('#uploadBtn');
 var fileInputEl = document.querySelector('#zipfile');
 var msgBoxEl = document.querySelector('#msgBox');
 var prjectNameEl = document.querySelector('#projectName');
+var projectDateEl = document.querySelector('.projectDate');
+var prjectNamePreviewEl = document.querySelector('.projectNamePreview');
 var step1El = document.querySelector('#step1');
 var step1NumEl = document.querySelector('.step1');
 var step2El = document.querySelector('#step2');
@@ -59,13 +61,20 @@ function listZipContents(zipFileName, filePaths) {
     });
 }
 
-function setProjectName(zipFileName) {
-    var projectName = zipFileName.trim();
+function cleanProjectName(projectName) {
+    var tmpName = projectName.trim();
     var extRegex = /\.zip/gi;
-    projectName = projectName.replace(/\W+/, '-');
-    projectName = projectName.replace(extRegex, '');
-    projectName = projectName.replace(badCharsRegex, '');
+    tmpName = tmpName.replace(/\W+/g, '-');
+    tmpName = tmpName.replace(extRegex, '');
+    tmpName = tmpName.replace(badCharsRegex, '');
+    return  tmpName;
+}
+
+function setProjectName(zipFileName) {
+    var projectName = cleanProjectName(zipFileName);
     prjectNameEl.value = projectName;
+    prjectNamePreviewEl.innerHTML = projectName;
+    projectDateEl.innerHTML = moment().format('YYYY/MM');
 }
 
 function readZipFile(zipFile) {
@@ -124,3 +133,12 @@ function goToStepOne() {
 }
 
 step1NumEl.addEventListener('click', goToStepOne, false);
+
+
+function updateURLPreview(evt) {
+    var tmpName = cleanProjectName(evt.currentTarget.value) || 'default';
+    prjectNamePreviewEl.innerHTML = tmpName;
+}
+
+prjectNameEl.addEventListener('change', updateURLPreview, false);
+prjectNameEl.addEventListener('keyup', updateURLPreview, false);

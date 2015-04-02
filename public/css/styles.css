@@ -97,8 +97,8 @@ header a {
 
 #zipFileList {
     font-family: "Guardian Text Sans Web","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
-    font-size: 11px;
-    line-height: 14px;
+    font-size: 12px;
+    line-height: 15px;
     padding-left: 1rem;
 }
 
@@ -149,6 +149,20 @@ header a {
     display: block;
 }
 
+
+.url-preview {
+  font-family: monospace;
+  font-size: 12px;
+  background: #F9F9F9;
+  padding: 6px 10px;
+}
+
+.projectNamePreview {
+  background: rgb(229, 229, 229);
+  display: inline-block;
+  padding: 2px 6px;
+  margin: 0 3px;
+}
 
 #embedPath {
   display: block;
