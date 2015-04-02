@@ -101,6 +101,14 @@ app.get('/', function(req, res){
             }
         };
 
+        var successData = {
+                files: filePaths,
+                zipFileName: file.originalname,
+                embedPath: awsConfig.baseURL + uploadPath
+            };
+        res.redirect('/success?' + querystring.stringify(successData));
+        return;
+
         // Sync folder
         var uploader = s3Client.uploadDir(uploadParams);
         uploader.on('error', function(err) {

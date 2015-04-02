@@ -35,6 +35,8 @@ header a {
 #steps {
     overflow: hidden;
     border-bottom: 1px solid #EEE;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
 }
 #step2 {
     display: none;
@@ -43,6 +45,11 @@ header a {
 .step {
     float: left;
     width: 120px;
+    display: block;
+}
+.step a {
+    text-decoration: none;
+    color: #000;
 }
 .step1 {
     cursor: pointer;
@@ -140,6 +147,43 @@ header a {
 
 #msgBox.active {
     display: block;
+}
+
+
+#embedPath {
+  display: block;
+  background: #F7F7F7;
+  padding: 0.8rem 1.1rem;
+  font-family: "Guardian Text Sans Web","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+  font-size: 1rem;
+  border: 1px solid #F1F1F1;
+  margin: .8rem 0;
+}
+
+
+.previewHeader {
+  margin: 2rem 0 0.5rem;
+}
+
+.preview {
+  float: left;
+  margin-right: 30px;
+}
+
+.preview .embedPreview {
+  margin-right: 10px;
+}
+
+.embedPreviewMobile {
+  width: 300px;
+}
+
+.embedPreviewDesktop {
+  width: 620px;
+}
+
+.previewType {
+  margin: 0.3rem 0;
 }
 
 .hide {

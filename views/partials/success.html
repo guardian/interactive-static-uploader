@@ -1,15 +1,45 @@
-<h1>Sucess</h1>
+<div id="steps">
+    <div class="step step1 disabled">
+        <a href="/">Step <span class="stepNum">1</span></a>
+    </div>
+    <div class="step step2 disabled">
+        Step <span class="stepNum">2</span>
+    </div>
+    <div class="step step3">
+        Step <span class="stepNum">3</span>
+    </div>
+</div>
 
-<p>File uploaded: {{zipFileName}}</p>
+<div id="msgBox"></div>
 
-<p>Embed path <a id="embedPath" href="{{embedPath}}"> {{embedPath}} </a> </p>
 
-<h2>Files uploaded</h2>
+<h1>Share and embed details</h1>
+
+<p>Embed path, share this link<br />
+    <a id="embedPath" href="{{embedPath}}"> {{embedPath}} </a>
+</p>
+
 <ul>
     {{#files}}
         <li><a href="{{embedPath}}{{.}}">{{.}}</a></li>
     {{/files}}
 </ul>
 
-<h2>Preview</h2>
-<iframe id="embedPreview" src="{{embedPath}}" width="400" height="300"></iframe>
+<h2 class="previewHeader">Preview</h2>
+<div class="preview">
+    <p class="previewType">Mobile</p>
+    <div class="embedPreview embedPreviewMobile">
+        <a href="{{embedPath}}" class="iframeLink" />{{embedPath}}</a>
+    </div>
+</div>
+
+<div class="preview">
+    <p class="previewType embedPreviewDesktop">Desktop</p>
+    <div class="embedPreview">
+        <a href="{{embedPath}}" class="iframeLink" />{{embedPath}}</a>
+    </div>
+<div class="preview">
+
+
+<script src="js/iframe-boot.js"></script>
+<script src="js/preview.js"></script>
