@@ -110,12 +110,19 @@ app.get('/', function(req, res){
             res.redirect('/error?msg=' + querystring.stringify(err));
         });
         uploader.on('progress', function() {
-            console.log('progress',
-            uploader.progressAmount, uploader.progressTotal);
+            // console.log('progress', uploader.progressAmount, uploader.progressTotal);
         });
         uploader.on('end', function() {
-            console.log('done uploading');
             tmpobj.removeCallback();
+
+            // Logo upload to file
+            var logInfo = [
+                new Date().toISOString(),
+                file.originalname,
+                awsConfig.baseURL + uploadPath 
+            ];
+            fs.appendFileSync('upload.log', logInfo.join(',') + '\n');
+            
             var successData = {
                 files: filePaths,
                 zipFileName: file.originalname,
