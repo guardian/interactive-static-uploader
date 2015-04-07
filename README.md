@@ -19,7 +19,6 @@ such as [forever](https://github.com/foreverjs/forever) or
 
 
 ## Todo
-- [ ] Output list of uploaded interactives
 - [ ] Security: Added Google Auth
 - [ ] Set sensible file size limits
 - [ ] Security: Restrict to Guardian IP
@@ -30,6 +29,7 @@ such as [forever](https://github.com/foreverjs/forever) or
 - [ ] Simple deploy system for fixes
 
 ## Done
+- [x] Output list of uploaded interactives
 - [x] Check for index.html
 - [x] Pick a sensible upload folder to prevent clashes
 - [x] Check for index.html

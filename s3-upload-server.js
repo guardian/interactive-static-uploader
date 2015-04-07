@@ -98,7 +98,7 @@ app.get('/', function(req, res){
                 Bucket: awsConfig.bucketName,
                 Prefix: uploadPath,
                 ACL: 'public-read',
-                CacheControl: 'max-age=3600'
+                CacheControl: 'max-age=604800' // week
             }
         };
 
