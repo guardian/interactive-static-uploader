@@ -121,7 +121,7 @@ app.get('/', function(req, res){
                 file.originalname,
                 awsConfig.baseURL + uploadPath 
             ];
-            fs.appendFileSync('upload.log', logInfo.join(',') + '\n');
+            fs.appendFileSync('public/upload.log', logInfo.join(',') + '\n');
             
             var successData = {
                 files: filePaths,
