@@ -1,4 +1,5 @@
 'use strict';
+var https = require('https');
 var express = require('express');
 var multer = require('multer');
 var morgan = require('morgan');
@@ -133,5 +134,8 @@ app.get('/', function(req, res){
     res.render('base', req.query);
 });
 
-// Start the app
-app.listen(3000);
+// TLS server
+var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
+var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
+var credentials = {key: privateKey, cert: certificate};
+https.createServer(credentials, app).listen(3000);
