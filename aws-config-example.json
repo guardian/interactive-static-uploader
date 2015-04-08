@@ -1,7 +1,0 @@
-{
-    "accessKeyId": "xxx",
-    "secretAccessKey": "xxx",
-    "baseURL": "http://s3bucket.amazonaws.com/",
-    "bucketName": "some-buckek",
-    "folderPath": "interactive/sub-folder/"
-}

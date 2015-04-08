@@ -1,6 +1,11 @@
 'use strict';
 var https = require('https');
+var passport = require('passport');
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var express = require('express');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var session = require('express-session');
 var multer = require('multer');
 var morgan = require('morgan');
 var moment = require('moment');
@@ -11,16 +16,24 @@ var tmp = require('tmp');
 var fs = require('fs');
 var recursive = require('recursive-readdir');
 var s3 = require('s3');
-var awsConfig = require('./aws-config.json');
+var config = require('./config.json');
 
 var s3Client = s3.createClient({
     multipartUploadThreshold: 20971520, // this is the default (20 MB)
-    multipartUploadSize: 15728640, // this is the default (15 MB)
+    multipartUploadSize: 15728640,      // this is the default (15 MB)
     s3Options: {
-        accessKeyId: awsConfig.accessKeyId,
-        secretAccessKey: awsConfig.secretAccessKey,
+        accessKeyId: config.accessKeyId,
+        secretAccessKey: config.secretAccessKey,
     }
 });
+
+
+
+// Message strings
+var messeges = {
+    noFile: 'No .zip file was selected.',
+    wrongFileType: 'Only .zip files are allowed.'
+};
 
 // Web server
 var app = express();
@@ -28,25 +41,65 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/bower_components'));
 app.engine('html', engines.mustache);
 app.set('view engine', 'html');
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan('dev'));
 app.use(multer({
     limits : { fileSize: 100000000 }, // 100MB
     putSingleFilesInArray: true
 }));
 
-var messeges = {
-    noFile: 'No .zip file was selected.',
-    wrongFileType: 'Only .zip files are allowed.'
-};
+app.use(session({
+    secret: config.sessionSecret,
+    resave: false,
+    saveUninitialized: true
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Setup auth
+var HOSTED_DOMAIN = 'guardian.co.uk';
+var GOOGLE_SCOPE = 'https://www.googleapis.com/auth/plus.login';
+
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
+passport.use(new GoogleStrategy({
+        clientID: config.googleClientID,
+        clientSecret: config.googleClientSecret,
+        callbackURL: 'https://localhost:3000/auth/google/callback'
+    },
+    function(accessToken, refreshToken, profile, done) {
+
+        process.nextTick(function () {
+            return done(null, profile);
+        });
+
+  })
+);
+
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) { return next(); }
+    res.redirect('/auth/google');
+}
 
 // Routes
-app.get('/', function(req, res){
-  res.render('base', { partials: { body: 'partials/uploadForm' } });
-})
-.get('/upload', function(req, res){
+app.get('/', ensureAuthenticated, function(req, res){
+    res.render('base', {
+        user: req.user,
+        partials: { body: 'partials/uploadForm' }
+    });
+});
+
+app.get('/upload', ensureAuthenticated, function(req, res){
     res.redirect('/');
-})
-.post('/upload', function(req, res) {
+});
+
+app.post('/upload', ensureAuthenticated, function(req, res) {
     var isFileUploaded = (req.files.zipfile && req.files.zipfile.length > 0);
     if (!isFileUploaded) {
         return res.redirect('/error?msg=' + messeges.noFile);
@@ -86,7 +139,7 @@ app.get('/', function(req, res){
             projectName = projectName.replace(badCharsRegex, '');
         }
 
-        var uploadPath = awsConfig.folderPath;
+        var uploadPath = config.folderPath;
         uploadPath += moment().format('YYYY/MM');
         uploadPath += '/' + projectName;
         uploadPath += tmpobj.name.substr(tmpobj.name.lastIndexOf('/'));
@@ -95,7 +148,7 @@ app.get('/', function(req, res){
         var uploadParams = {
             localDir: tmpobj.name,
             s3Params: {
-                Bucket: awsConfig.bucketName,
+                Bucket: config.bucketName,
                 Prefix: uploadPath,
                 ACL: 'public-read',
                 CacheControl: 'max-age=604800' // week
@@ -109,9 +162,6 @@ app.get('/', function(req, res){
             tmpobj.removeCallback();
             res.redirect('/error?msg=' + querystring.stringify(err));
         });
-        uploader.on('progress', function() {
-            // console.log('progress', uploader.progressAmount, uploader.progressTotal);
-        });
         uploader.on('end', function() {
             tmpobj.removeCallback();
 
@@ -119,27 +169,62 @@ app.get('/', function(req, res){
             var logInfo = [
                 new Date().toISOString(),
                 file.originalname,
-                awsConfig.baseURL + uploadPath 
+                config.baseURL + uploadPath 
             ];
             fs.appendFileSync('public/upload.log', logInfo.join(',') + '\n');
             
             var successData = {
                 files: filePaths,
                 zipFileName: file.originalname,
-                embedPath: awsConfig.baseURL + uploadPath
+                embedPath: config.baseURL + uploadPath
             };
             res.redirect('/success?' + querystring.stringify(successData));
         });
     });
-})
-.get('/error', function(req, res) {
+});
+
+app.get('/error', ensureAuthenticated, function(req, res) {
     req.query.partials = { body: 'partials/error'};
-    res.render('base', req.query);
-})
-.get('/success', function(req, res) { 
-    req.query.partials = { body: 'partials/success'};
+    req.query.user = req.user;
     res.render('base', req.query);
 });
+
+app.get('/success', ensureAuthenticated, function(req, res) { 
+    req.query.partials = { body: 'partials/success'};
+    req.query.user = req.user;
+    res.render('base', req.query);
+});
+
+app.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+});
+
+app.get('/auth/google',
+    passport.authenticate('google', {
+        'scope': GOOGLE_SCOPE,
+        'hostedDomain': HOSTED_DOMAIN,
+        'failureRedirect': '/auth/google',
+        'max_auth_age': 604800 // one week
+    })
+);
+
+app.get('/auth/google/callback', 
+    passport.authenticate('google', {
+        'scope': GOOGLE_SCOPE,
+        'hostedDomain': HOSTED_DOMAIN,
+        'failureRedirect': '/auth/google',
+        'max_auth_age': 604800 // one week
+    }),
+  function(req, res) {
+    res.redirect('/');
+  });
+
+app.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+});
+
 
 // TLS server
 var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');

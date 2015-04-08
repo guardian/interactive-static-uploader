@@ -19,16 +19,18 @@ such as [forever](https://github.com/foreverjs/forever) or
 
 
 ## Todo
-- [ ] Security: Added Google Auth
+- [ ] Reduce code clutter
 - [ ] Set sensible file size limits
-- [ ] Security: Restrict to Guardian IP
 - [ ] Black-list files and folders eg. .DS_Store
-- [ ] Browser test 
 - [ ] Report progress to user while uploading
 - [ ] Write docs
+- [ ] Browser test 
 - [ ] Simple deploy system for fixes
+- [ ] Fix fonts
 
 ## Done
+- [x] Security: Added Google Auth
+- [x] Security: Restrict to Guardian IP
 - [x] Output list of uploaded interactives
 - [x] Check for index.html
 - [x] Pick a sensible upload folder to prevent clashes

@@ -5,26 +5,49 @@ body {
     font-size: 18px;
 }
 
-header {
+#header {
     font-family: "Guardian Egyptian Web","Guardian Text Egyptian Web",Georgia,serif;
     background: #005689;
     color: #FFF;
     padding: 7px 10px;
     font-weight: 700;
     line-height: 0.9rem;
+    overflow: hidden;
 }
 
+#logo {
+  display: inline-block;
+}
 #logo svg {
     width: 80px;
     height: 15px;
     display: inline-block;
-    float: left;
     margin-right: 10px;
 }
 
-header a {
+#header a {
     color: #FFF;
     text-decoration: none;
+}
+
+.homeLink {
+  float: left;
+}
+.user {
+  float: right;
+  font-family: "Guardian Text Sans Web","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+  font-size: 13px;
+}
+.userPhoto {
+  width: 16px;
+  vertical-align: middle;
+  margin-left: 10px;
+}
+.userLogout {
+  display: inline-block;
+  border-right: 1px solid rgba(255, 255, 255, 0.4);
+  padding-right: 10px;
+  margin-right: 7px;
 }
 
 #wrapper {
