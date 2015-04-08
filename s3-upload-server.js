@@ -167,6 +167,7 @@ app.post('/upload', ensureAuthenticated, function(req, res) {
                 // Logo upload to file
                 var logInfo = [
                     new Date().toISOString(),
+                    req.user.displayName,
                     file.originalname,
                     config.baseURL + uploadPath 
                 ];
