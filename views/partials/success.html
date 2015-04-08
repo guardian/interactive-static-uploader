@@ -19,12 +19,6 @@
     <a id="embedPath" href="{{embedPath}}"> {{embedPath}} </a>
 </p>
 
-<ul>
-    {{#files}}
-        <li><a href="{{embedPath}}{{.}}">{{.}}</a></li>
-    {{/files}}
-</ul>
-
 <h2 class="previewHeader">Preview</h2>
 <div class="preview">
     <p class="previewType">Mobile</p>
@@ -38,8 +32,14 @@
     <div class="embedPreview">
         <a href="{{embedPath}}" class="iframeLink" />{{embedPath}}</a>
     </div>
-<div class="preview">
+</div>
 
+<h2 class="previewHeader">File list</h2>
+<ul>
+    {{#files}}
+        <li><a href="{{embedPath}}{{.}}">{{.}}</a></li>
+    {{/files}}
+</ul>
 
 <script src="js/iframe-boot.js"></script>
 <script src="js/preview.js"></script>
