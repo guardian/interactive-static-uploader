@@ -81,6 +81,10 @@ function readZipFile(zipFile) {
     return function(evt) {
         var zip = new JSZip(evt.target.result);
         var filePaths = Object.keys(zip.files);
+        // Filter out Mac's zip guff
+        filePaths = filePaths.filter(function(file) {
+            return file.indexOf('__MACOSX') !== 0;
+        });
 
         checkForRootIndexFile(filePaths);
         checkForIndexFile(filePaths);

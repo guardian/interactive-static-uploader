@@ -6,5 +6,6 @@
     "folderPath": "interactive/sub-folder/",
     "googleClientID": "xxx",
     "googleClientSecret": "xxx",
+    "googleCallbackURL": "https://example.com/",
     "sessionSecret": "xxx"
 }

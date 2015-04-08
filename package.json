@@ -20,6 +20,7 @@
     "passport": "^0.2.1",
     "passport-google-oauth": "^0.2.0",
     "recursive-readdir": "^1.2.1",
+    "rimraf": "^2.3.2",
     "s3": "^4.4.0",
     "tmp": "0.0.25"
   }

@@ -1,5 +1,4 @@
 'use strict';
-var https = require('https');
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var express = require('express');
@@ -14,6 +13,7 @@ var querystring = require('querystring');
 var engines = require('consolidate');
 var tmp = require('tmp');
 var fs = require('fs');
+var rmdir = require('rimraf');
 var recursive = require('recursive-readdir');
 var s3 = require('s3');
 var config = require('./config.json');
@@ -71,7 +71,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new GoogleStrategy({
         clientID: config.googleClientID,
         clientSecret: config.googleClientSecret,
-        callbackURL: 'https://localhost:3000/auth/google/callback'
+        callbackURL: config.googleCallbackURL
     },
     function(accessToken, refreshToken, profile, done) {
 
@@ -118,68 +118,70 @@ app.post('/upload', ensureAuthenticated, function(req, res) {
             return console.log(err);
         }
 
-        var filePaths = [];
-        recursive(tmpobj.name, function(err, files) {
-            if (err) { return console.log('ERROR', err); }
-            filePaths = files.map(function(file) {
-                return file.replace(tmpobj.name, '');
-            });
-        });
-
         // Delete zip
         fs.unlink(zipPath);
 
-        var projectName = 'visual';
-        if (req.body.projectName && req.body.projectName.length > 1) {
-            projectName = req.body.projectName.toLowerCase();
-            projectName = projectName.trim();
-            projectName = projectName.replace(' ', '-');
+        // Remove MAC __MACOSX zip folder
+        rmdir(tmpobj.name + '/__MACOSX', function(err){ console.log(err); });
+        
+        recursive(tmpobj.name, function(err, files) {
+            if (err) { return console.log('ERROR', err); }
+            var filePaths = files.map(function(file) {
+                return file.replace(tmpobj.name, '');
+            });
 
-            var badCharsRegex = /[^a-zA-Z\d\-\_\+]/g;
-            projectName = projectName.replace(badCharsRegex, '');
-        }
+            var projectName = 'visual';
+            if (req.body.projectName && req.body.projectName.length > 1) {
+                projectName = req.body.projectName.toLowerCase();
+                projectName = projectName.trim();
+                projectName = projectName.replace(' ', '-');
 
-        var uploadPath = config.folderPath;
-        uploadPath += moment().format('YYYY/MM');
-        uploadPath += '/' + projectName;
-        uploadPath += tmpobj.name.substr(tmpobj.name.lastIndexOf('/'));
-
-        // Set upload parameters
-        var uploadParams = {
-            localDir: tmpobj.name,
-            s3Params: {
-                Bucket: config.bucketName,
-                Prefix: uploadPath,
-                ACL: 'public-read',
-                CacheControl: 'max-age=604800' // week
+                var badCharsRegex = /[^a-zA-Z\d\-\_\+]/g;
+                projectName = projectName.replace(badCharsRegex, '');
             }
-        };
 
-        // Sync folder
-        var uploader = s3Client.uploadDir(uploadParams);
-        uploader.on('error', function(err) {
-            console.error('unable to sync:', err.stack);
-            tmpobj.removeCallback();
-            res.redirect('/error?msg=' + querystring.stringify(err));
-        });
-        uploader.on('end', function() {
-            tmpobj.removeCallback();
+            var uploadPath = config.folderPath;
+            uploadPath += moment().format('YYYY/MM');
+            uploadPath += '/' + projectName;
+            uploadPath += tmpobj.name.substr(tmpobj.name.lastIndexOf('/'));
 
-            // Logo upload to file
-            var logInfo = [
-                new Date().toISOString(),
-                file.originalname,
-                config.baseURL + uploadPath 
-            ];
-            fs.appendFileSync('public/upload.log', logInfo.join(',') + '\n');
-            
-            var successData = {
-                files: filePaths,
-                zipFileName: file.originalname,
-                embedPath: config.baseURL + uploadPath
+            // Set upload parameters
+            var uploadParams = {
+                localDir: tmpobj.name,
+                s3Params: {
+                    Bucket: config.bucketName,
+                    Prefix: uploadPath,
+                    ACL: 'public-read',
+                    CacheControl: 'max-age=604800' // week
+                }
             };
-            res.redirect('/success?' + querystring.stringify(successData));
-        });
+
+            // Sync folder
+            var uploader = s3Client.uploadDir(uploadParams);
+            uploader.on('error', function(err) {
+                console.error('unable to sync:', err.stack);
+                tmpobj.removeCallback();
+                res.redirect('/error?msg=' + querystring.stringify(err));
+            });
+            uploader.on('end', function() {
+                // Logo upload to file
+                var logInfo = [
+                    new Date().toISOString(),
+                    file.originalname,
+                    config.baseURL + uploadPath 
+                ];
+                fs.appendFileSync('public/upload.log', logInfo.join(',') + '\n');
+                
+                var successData = {
+                    files: filePaths,
+                    zipFileName: file.originalname,
+                    embedPath: config.baseURL + uploadPath
+                };
+
+                res.redirect('/success?' + querystring.stringify(successData));
+            });
+
+         });
     });
 });
 
@@ -227,7 +229,8 @@ app.get('/logout', function(req, res){
 
 
 // TLS server
-var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
-var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
-var credentials = {key: privateKey, cert: certificate};
-https.createServer(credentials, app).listen(3000);
+// var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
+// var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
+// var credentials = {key: privateKey, cert: certificate};
+// https.createServer(credentials, app).listen(3000);
+app.listen(3000);
