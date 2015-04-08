@@ -15,15 +15,16 @@
 <form action="/upload" method="post" enctype="multipart/form-data" id="uploader">
     <div id="step1">
         <p class="instructions">
-            Choose a <code>.zip</code> file containing the files you want to upload or drag it onto the box below.
+            Choose a <code>.zip</code> file containing the <code>index.html</code> and assets you want iframed or drag it onto the box below.
         </p>
         <input type="file" name="zipfile" id="zipfile" />    
+        <h2>Demo</h2>
+        <img src="imgs/static_uploader_demo.gif" />
     </div>
     <div id="step2">
 
         <div id="zipFile">
             <p><span id="zipFileName"></span> file list</p>
-            <p>This for iframed content only. If you're using boot.js use the interactive template or manually upload</p>
             <ul id="zipFileList"></ul>
         </div>
 
