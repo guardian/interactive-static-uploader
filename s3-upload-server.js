@@ -60,7 +60,9 @@ app.use(passport.session());
 
 // Setup auth
 var HOSTED_DOMAIN = 'guardian.co.uk';
-var GOOGLE_SCOPE = 'https://www.googleapis.com/auth/plus.login';
+var GOOGLE_SCOPE = 'openid email'; 
+
+
 
 passport.serializeUser(function(user, done) {
     done(null, user);
@@ -171,7 +173,8 @@ app.post('/upload', ensureAuthenticated, function(req, res) {
                     file.originalname,
                     config.baseURL + uploadPath 
                 ];
-                fs.appendFileSync('public/upload.log', logInfo.join(',') + '\n');
+                fs.appendFileSync('public/upload.log',
+                                  logInfo.join(',') + '\n');
                 
                 var successData = {
                     files: filePaths,
