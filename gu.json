@@ -20,5 +20,5 @@
     "baseURL": "https://interactive.guim.co.uk/",
     "accessKeyId": "",
     "secretAccessKey": "",
-    "secret": "supersecret",
+    "secret": "supersecret"
 }
