@@ -5,3 +5,5 @@ temp/
 .DS_Store
 config.json
 public/upload.log
+var
+npm-debug.log*

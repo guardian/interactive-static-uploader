@@ -1,0 +1,24 @@
+{
+    "base_url": "/uploader",
+    "controllers": "./src/controllers",
+    "routes": {
+        "GET /": "index",
+        "POST /upload": "upload",
+        "GET /error": "error",
+        "GET /success": "success"
+    },
+
+    "logdir": "var/log",
+
+    "static": [
+        {"src": ["**/*"], "cwd": "public", "dest": "/"},
+        {"src": ["**/*"], "cwd": "bower_components", "dest": "/"}
+    ],
+
+    "bucketName": "gdn-cdn",
+    "folderPath": "uploader/embed",
+    "baseURL": "https://interactive.guim.co.uk/",
+    "accessKeyId": "",
+    "secretAccessKey": "",
+    "secret": "supersecret",
+}
