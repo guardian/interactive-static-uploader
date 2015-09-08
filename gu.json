@@ -5,7 +5,7 @@
         "GET /": "index",
         "POST /upload": "upload",
         "GET /error": "error",
-        "GET /success": "success"
+    	"GET /success": "success"
     },
 
     "logdir": "var/log",
