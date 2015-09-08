@@ -12,7 +12,7 @@ var addIframe = function (el, context, config, mediator) {
             iframe.style.width = '100%';
             iframe.style.border = 'none';
             iframe.height = '500'; // default height
-            iframe.src = link.href;
+            iframe.src = window.location.protocol === 'https:' ? link.href.replace(/^http\:/, 'https:') : link.href;
 
             // Listen for requests from the window
             window.addEventListener('message', function(event) {
