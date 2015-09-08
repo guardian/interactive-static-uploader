@@ -91,7 +91,7 @@ exports.upload = function*() {
                 CacheControl: 'max-age=604800' // week
             }
         })
-        var uri = path.join(gu.config.baseURL, uploadPath);
+        var uri = gu.config.baseURL + uploadPath;
         gu.log.info(`${zipfile.name} -> ${uri}`)
         this.redirect('success?' + querystring.stringify({
             files: filePaths,
