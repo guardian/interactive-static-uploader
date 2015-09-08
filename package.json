@@ -23,5 +23,12 @@
     "rimraf": "^2.3.2",
     "s3": "^4.4.0",
     "tmp": "0.0.25"
+  },
+  "devDependencies": {
+    "bower": "^1.5.2"
+  },
+  "scripts": {
+    "postinstall": "./node_modules/.bin/bower install",
+    "www": "node s3-upload-server.js"
   }
 }

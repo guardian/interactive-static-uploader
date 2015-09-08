@@ -18,13 +18,6 @@
                 </div>
                 Visuals static uploader
             </a>
-
-            <div class="user">
-                <a href="/logout" class="userLogout">Logout</a>
-                <span class="userName">{{ user.displayName }}</span>
-                <img src="{{ user.photos.0.value }}" alt="user photo" class="userPhoto" />
-            </div>
-
         </header>
         <div id="wrapper">
             {{> body }}
