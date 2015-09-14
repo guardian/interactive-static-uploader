@@ -38,7 +38,7 @@ function www(opts) {
 
     app.use(responseTime());
     app.use(compress());
-    app.use(koaBody({multipart: true}));
+    app.use(koaBody({multipart: true, formidable: {maxFieldsSize: 20 * 1024 * 1024}}));
     app.use(koaSession(app));
 
 
