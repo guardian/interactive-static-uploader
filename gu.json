@@ -17,7 +17,7 @@
 
     "bucketName": "gdn-cdn",
     "folderPath": "uploader/embed",
-    "baseURL": "http://interactive.guim.co.uk/",
+    "baseURL": "https://interactive.guim.co.uk/",
     "accessKeyId": "",
     "secretAccessKey": "",
     "secret": "supersecret"
