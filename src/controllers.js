@@ -20,10 +20,10 @@ var baseTemplate = path.resolve(__dirname, 'templates/base.html')
 var s3Client = s3.createClient({
     multipartUploadThreshold: 20971520, // this is the default (20 MB)
     multipartUploadSize: 15728640,      // this is the default (15 MB)
-    s3Options: {
-        accessKeyId: gu.config.accessKeyId,
-        secretAccessKey: gu.config.secretAccessKey,
-    }
+    // s3Options: {
+    //     accessKeyId: gu.config.accessKeyId,
+    //     secretAccessKey: gu.config.secretAccessKey,
+    // }
 });
 
 // Message strings
