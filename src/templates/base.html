@@ -13,7 +13,7 @@
             const getTrackingPixel = () => {
                 const isProd = window.location.hostname === "visuals.gutools.co.uk";
                 const stage = isProd ? "PROD" : "CODE";
-                const trackingUrl = isProd ? "user-telemetry.gutools.co.uk" : "user-telemetry.local.dev-gutools.co.uk";
+                const trackingUrl = isProd ? "https://user-telemetry.gutools.co.uk" : "https://user-telemetry.local.dev-gutools.co.uk";
                 const pixel = `<img height=0 width=0 src="${trackingUrl}?app=interactive-static-uploader&stage=${stage}&path=/">`
                 return pixel;
             };
