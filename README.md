@@ -1,22 +1,38 @@
 # Guardian visuals static uploader
 Upload static assets to S3.
 
-A zip file can be uploaded and the contents of which will be servered from a
+A zip file can be uploaded and the contents of which will be served from a
 new folder on S3.
 
 ## Setup
 You'll need `nodejs` and `npm`.
 
+To run locally:
 ```bash
-nmp install
-node s3-upload-server.js
+npm install
+npm run dev
 
 ```
+This will serve the app locally at http://0.0.0.0:4004/
 
 As this will be running as a service it's advised to use process manager 
 such as [forever](https://github.com/foreverjs/forever) or 
 [pm2](https://github.com/Unitech/pm2)
 
+## Deployment
+This app is deployed manually to an EC2 instance in our `interactives` account. The Interactives team can share the location of the instance with you.
+
+In order to deploy a new version, first merge your changes to the `master` branch in GitHub.
+
+Next, ssh onto the EC2 instance and run:
+
+```bash
+cd interactive-static-uploader
+git pull
+sudo supervisorctl restart staticuploader
+```
+
+In order to ssh onto the instance, someone with pre-existing access will need to add your ssh key to the instance. You'll also need to be working on an IP permitted by the security group (the office is permitted, for example).
 
 ## Todo
 - [ ] Reduce code clutter
