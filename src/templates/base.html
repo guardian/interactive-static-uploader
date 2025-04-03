@@ -9,6 +9,16 @@
         <link type="text/css" rel="stylesheet" href="css/fonts.css" />
         <link type="text/css" rel="stylesheet" href="css/styles.css" />
         <title>Guardian - Visuals static uploader</title>
+        <script>
+            const getTrackingPixel = () => {
+                const isProd = window.location.hostname === "visuals.gutools.co.uk";
+                const stage = isProd ? "PROD" : "CODE";
+                const trackingUrl = isProd ? "user-telemetry.gutools.co.uk" : "user-telemetry.local.dev-gutools.co.uk";
+                const pixel = `<img height=0 width=0 src="${trackingUrl}?app=interactive-static-uploader&stage=${stage}&path=/">`
+                return pixel;
+            };
+            document.getElementsByTagName("head")[0].innerHTML += getTrackingPixel(); 
+        </script>
     </head>
     <body>
         <header id="header">
