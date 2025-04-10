@@ -14,7 +14,8 @@
                 const isProd = window.location.hostname === "visuals.gutools.co.uk";
                 const stage = isProd ? "PROD" : "CODE";
                 const trackingUrl = isProd ? "https://user-telemetry.gutools.co.uk" : "https://user-telemetry.local.dev-gutools.co.uk";
-                const pixel = `<img height=0 width=0 src="${trackingUrl}/guardian-tool-accessed?app=interactive-static-uploader&stage=${stage}&path=/">`
+                const path = window.location.pathname;
+                const pixel = `<img height=0 width=0 src="${trackingUrl}/guardian-tool-accessed?app=interactive-static-uploader&stage=${stage}&path=${path}">`
                 return pixel;
             };
             document.getElementsByTagName("head")[0].innerHTML += getTrackingPixel(); 
