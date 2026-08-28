@@ -14,6 +14,7 @@ var s3 = require('s3');
 var gu = require('koa-gu');
 var parse = require('co-busboy');
 var os = require('os');
+var tagManager = require('./tagManager');
 
 var baseTemplate = path.resolve(__dirname, 'templates/base.html')
 
@@ -31,6 +32,26 @@ var messages = {
 // Routes
 exports.index = function*() {
     this.body = yield cons.mustache(baseTemplate, {partials: { body: 'partials/uploadForm' }});
+}
+
+exports.commissioningDesks = function*() {
+    var query = this.query.query;
+
+    if (!query) {
+        this.body = { desks: [] };
+        return;
+    }
+
+    try {
+        var desks = yield tagManager.searchCommissioningDesks(
+            gu.config.tagManagerUrl, query
+        );
+        this.body = { desks: desks };
+    } catch (err) {
+        gu.log.error('Unable to search Tag Manager:', err.stack);
+        this.status = 502;
+        this.body = { desks: [], error: 'Tag Manager is unavailable' };
+    }
 }
 
 exports.upload = function*() {
@@ -63,6 +84,18 @@ exports.upload = function*() {
             .toLowerCase().trim().replace(' ', '-')
             .replace(/[^a-zA-Z\d\-\_\+]/g, ''); // enforce character whitelist
 
+    var commissioningDesks = (fields.commissioningDesks || '')
+        .split('|')
+        .map(desk => desk.trim())
+        .filter(desk => desk.length > 0);
+
+    if (commissioningDesks.length > 0) {
+        fs.writeFileSync(
+            path.join(tmpobj.name, 'config.json'),
+            JSON.stringify({ commissioningDesks: commissioningDesks }, null, 4)
+        );
+    }
+
     var uploadPath = path.join(
         gu.config.folderPath,
         moment().format('YYYY/MM'),
@@ -92,7 +125,8 @@ exports.upload = function*() {
         this.redirect('success?' + querystring.stringify({
             files: filePaths,
             zipFileName: zipfile.name,
-            embedPath: uri
+            embedPath: uri,
+            commissioningDesks: commissioningDesks
         }));
     } catch (err) {
         this.redirect('error?msg=' + querystring.stringify(err.message));

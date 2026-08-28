@@ -146,3 +146,88 @@ function updateURLPreview(evt) {
 
 prjectNameEl.addEventListener('change', updateURLPreview, false);
 prjectNameEl.addEventListener('keyup', updateURLPreview, false);
+
+// Commissioning desks dropdown. Selected desks are kept in `selectedDesks`
+// and mirrored into a hidden, pipe-separated input field so they're
+// submitted along with the rest of the form.
+var desksSearchEl = document.querySelector('#commissioningDesksSearch');
+var desksResultsEl = document.querySelector('#commissioningDesksResults');
+var desksSelectedEl = document.querySelector('#commissioningDesksSelected');
+var desksValueEl = document.querySelector('#commissioningDesksValue');
+
+var selectedDesks = [];
+var desksSearchDebounce = null;
+
+function renderSelectedDesks() {
+    desksSelectedEl.innerHTML = '';
+    selectedDesks.forEach(function(desk) {
+        var li = document.createElement('li');
+        li.className = 'desk-chip';
+        li.innerHTML = desk.name +
+            ' <button type="button" class="desk-chip-remove" ' +
+            'data-id="' + desk.id + '">&times;</button>';
+        desksSelectedEl.appendChild(li);
+    });
+    desksValueEl.value = selectedDesks.map(function(desk) {
+        return desk.id;
+    }).join('|');
+}
+
+function addDesk(desk) {
+    var alreadySelected = selectedDesks.some(function(existing) {
+        return existing.id === desk.id;
+    });
+
+    if (!alreadySelected) {
+        selectedDesks.push(desk);
+        renderSelectedDesks();
+    }
+
+    desksResultsEl.innerHTML = '';
+    desksSearchEl.value = '';
+}
+
+function removeDesk(id) {
+    selectedDesks = selectedDesks.filter(function(desk) {
+        return desk.id !== id;
+    });
+    renderSelectedDesks();
+}
+
+function renderDeskResults(desks) {
+    desksResultsEl.innerHTML = '';
+    desks.forEach(function(desk) {
+        var li = document.createElement('li');
+        li.textContent = desk.name;
+        li.addEventListener('click', function() { addDesk(desk); });
+        desksResultsEl.appendChild(li);
+    });
+}
+
+function searchCommissioningDesks(query) {
+    if (!query) {
+        desksResultsEl.innerHTML = '';
+        return;
+    }
+
+    fetch('commissioningdesks?query=' + encodeURIComponent(query))
+        .then(function(res) { return res.json(); })
+        .then(function(json) { renderDeskResults(json.desks || []); })
+        .catch(function() { desksResultsEl.innerHTML = ''; });
+}
+
+if (desksSearchEl) {
+    desksSearchEl.addEventListener('input', function(evt) {
+        var query = evt.target.value;
+        clearTimeout(desksSearchDebounce);
+        desksSearchDebounce = setTimeout(function() {
+            searchCommissioningDesks(query);
+        }, 300);
+    });
+
+    desksSelectedEl.addEventListener('click', function(evt) {
+        if (evt.target.classList.contains('desk-chip-remove')) {
+            removeDesk(evt.target.getAttribute('data-id'));
+        }
+    });
+}

@@ -5,7 +5,8 @@
         "GET /": "index",
         "POST /upload": "upload",
         "GET /error": "error",
-    	"GET /success": "success"
+    	"GET /success": "success",
+        "GET /commissioningdesks": "commissioningDesks"
     },
 
     "logdir": "var/log",
@@ -18,6 +19,7 @@
     "bucketName": "gdn-cdn",
     "folderPath": "uploader/embed",
     "baseURL": "https://interactive.guim.co.uk/",
+    "tagManagerUrl": "https://tagmanager.gutools.co.uk",
     "accessKeyId": "",
     "secretAccessKey": "",
     "secret": "supersecret"

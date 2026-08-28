@@ -145,6 +145,67 @@ body {
   cursor: pointer;
 }
 
+#commissioningDesksLabel {
+    display: block;
+    clear: both;
+    margin-bottom: 0.4rem;
+}
+
+#commissioningDesksLabel .optional {
+    font-weight: normal;
+    opacity: 0.6;
+}
+
+#commissioningDesksSearch {
+    display: block;
+    font-size: 1rem;
+    padding: 0.2rem 0.5rem;
+    margin-bottom: 0.3rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#commissioningDesksResults,
+#commissioningDesksSelected {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#commissioningDesksResults li {
+    padding: 0.3rem 0.5rem;
+    cursor: pointer;
+    background: #F9F9F9;
+    border-bottom: 1px solid #F1F1F1;
+    font-family: "Guardian Text Sans Web","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    font-size: 0.9rem;
+}
+
+#commissioningDesksResults li:hover {
+    background: #F1F1F1;
+}
+
+#commissioningDesksSelected {
+    margin-top: 0.4rem;
+}
+
+.desk-chip {
+    display: inline-block;
+    background: rgb(229, 229, 229);
+    padding: 2px 6px;
+    margin: 0 6px 6px 0;
+    font-family: "Guardian Text Sans Web","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    font-size: 0.85rem;
+}
+
+.desk-chip-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 4px;
+}
+
 #msgBox {
     background: #E46B4C;
     text-align: center;
