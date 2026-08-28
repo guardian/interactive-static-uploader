@@ -41,5 +41,15 @@
     {{/files}}
 </ul>
 
+<h2 class="previewHeader">Commissioning desk(s)</h2>
+<ul>
+    {{#commissioningDesks}}
+        <li>{{.}}</li>
+    {{/commissioningDesks}}
+    {{^commissioningDesks}}
+        <li>None selected</li>
+    {{/commissioningDesks}}
+</ul>
+
 <script src="js/iframe-boot.js"></script>
 <script src="js/preview.js"></script>

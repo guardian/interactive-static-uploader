@@ -32,6 +32,20 @@
             <label for="projectName" id="projectNameLabel">Uploaed folder path name</label>
             <p class="url-preview">/uploader/embed/<span class="projectDate"></span>/<span class="projectNamePreview"></span>/giv-0000/</p>
             <input id="projectName" name="projectName" placeholder="Project name" />
+
+            <label for="commissioningDesksSearch" id="commissioningDesksLabel">
+                Commissioning desk(s) <span class="optional">(optional)</span>
+            </label>
+            <input
+                type="text"
+                id="commissioningDesksSearch"
+                placeholder="Search commissioning desks, or type &#39;*&#39; to show all&hellip;"
+                autocomplete="off"
+            />
+            <ul id="commissioningDesksResults"></ul>
+            <ul id="commissioningDesksSelected"></ul>
+            <input type="hidden" name="commissioningDesks" id="commissioningDesksValue" value="" />
+
             <input type="submit" value="Upload" id="uploadBtn" disabled="disabled" />
         </div>
     </div>

@@ -4,6 +4,7 @@
     "baseURL": "http://s3bucket.amazonaws.com/",
     "bucketName": "some-bucket",
     "folderPath": "interactive/sub-folder/",
+    "tagManagerUrl": "https://tagmanager.code.dev-gutools.co.uk",
     "googleClientID": "xxx",
     "googleClientSecret": "xxx",
     "googleCallbackURL": "https://example.com/",
