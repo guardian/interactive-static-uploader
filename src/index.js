@@ -12,7 +12,7 @@ var env = process.env.NODE_ENV || 'development'
 module.exports = www;
 
 function www(opts) {
-    gu.init();
+    gu.init({ db: false });
     var app = koa();
 
     app.keys = [gu.config.secret];
