@@ -5,6 +5,24 @@ body {
     font-size: 18px;
 }
 
+.replacement-banner {
+    box-sizing: border-box;
+    max-width: 1020px;
+    margin: 2rem auto 0;
+    background: #ffe500;
+    text-align: center;
+    color: #121212;
+    padding: 16px;
+    font-family: "Guardian Text Sans Web","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    line-height: 1.5;
+    overflow-wrap: break-word;
+}
+
+.replacement-banner a {
+    color: inherit;
+    text-decoration: underline;
+}
+
 #header {
     font-family: "Guardian Egyptian Web","Guardian Text Egyptian Web",Georgia,serif;
     background: #005689;
